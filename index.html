@@ -2464,8 +2464,8 @@
         <li><b>No auto-charge.</b> We never take money again by ourselves.</li>
         <li><b>Your code appears right away</b> in Settings.</li>
       </ul>
-      <button class="subscribe-btn" id="subscribeBtn" disabled>🔒 Pay once via GCash / Maya<small>30 days · No auto-charges</small></button>
-      <div class="pay-methods"><span>GCash</span><span>Maya · QR Ph</span><span>Card</span></div>
+      <button class="subscribe-btn" id="subscribeBtn" disabled>🔒 Pay once via QR Ph<small>30 days · No auto-charges</small></button>
+      <div class="pay-methods"><span>QR Ph</span><span>Scan with GCash, Maya or your bank app</span></div>
       <div class="error-box" id="paywallError" style="display:none;"></div>
 
            <p class="paywall-fine">Payments are processed securely by PayMongo. You'll be taken to their payment page and brought right back here.</p>
@@ -5482,7 +5482,7 @@
       paywallError.textContent = err.message;
       paywallError.style.display = 'block';
       subscribeBtn.disabled = !termsAgree.checked;
-      subscribeBtn.innerHTML = '🔒 Pay once via GCash / Maya<small>30 days · No auto-charges</small>';
+      subscribeBtn.innerHTML = '🔒 Pay once via QR Ph<small>30 days · No auto-charges</small>';
     }
   });
 
