@@ -2131,6 +2131,7 @@
           <details class="fold" id="foldSave">
             <summary>💾 Save · Share · Print<small>Image or PDF · add more pages · send · print</small></summary>
             <div class="fold-body">
+          <img id="scanSavePreview" alt="Your finished page" style="display:none;width:100%;max-height:280px;object-fit:contain;border:1px solid #e3d5c8;border-radius:10px;background:#fff;margin-bottom:12px;">
           <div class="tool-hint" style="margin-top:0;">Got more pages? Add them before saving — they'll all go into one PDF.</div>
           <div class="page-thumbs" id="scanPageThumbs" style="margin-top:10px;"></div>
           <div class="tool-upload-row" style="margin-top:10px;">
@@ -3404,7 +3405,21 @@
     showStatus('Page added ✓ Now take or upload the next page.', 3000);
   });
 
-  document.getElementById('foldSave').addEventListener('toggle', (e) => { if(e.target.open) setScanStep(3); });
+  document.getElementById('foldSave').addEventListener('toggle', (e) => {
+    if(!e.target.open) return;
+    setScanStep(3);
+    // Show the finished page right here, so you can still see it while choosing Save / Share / Print.
+    const prev = document.getElementById('scanSavePreview');
+    if(prev){
+      try {
+        if(scanSrcCanvas && scanCanvas && scanCanvas.width > 0){
+          if(scanMode === 'corners') ensureScanResult();
+          prev.src = scanCanvas.toDataURL('image/jpeg', 0.7);
+          prev.style.display = 'block';
+        } else { prev.style.display = 'none'; }
+      } catch(err){ prev.style.display = 'none'; }
+    }
+  });
   // ✨ AI Retype straight from the corner dots: flattens the page, then retypes it.
   document.getElementById('scanAiRetypeBtn').addEventListener('click', () => scanRetypeBtn.click());
   (function(){ const b = document.getElementById('scanAiBadge'); try{ if(localStorage.getItem('sf_premium_unlocked') === 'true') b.textContent = 'PREMIUM'; }catch(e){} })();
