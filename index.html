@@ -1745,7 +1745,7 @@
   #subscribeBtn:disabled{ opacity:.55; }
   .pay-methods{ display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap; }
   .pay-methods span{ font-size:12.5px; font-weight:700; padding:6px 10px; border-radius:8px; background:#F0E6E0; color:#3A2A26; }
-  .scan-toolbar{ display:flex; gap:8px; margin:10px 0 8px; }
+  .scan-toolbar{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 8px; }
   .scan-toolbar button{ flex:1; padding:10px 6px; border-radius:10px; border:1.5px solid var(--gold); background:#fff; color:var(--gold); font-weight:700; font-size:14px; cursor:pointer; font-family:inherit; }
   .scan-toolbar button:disabled{ opacity:.4; cursor:default; }
   .scan-toolbar button.on{ background:var(--gold); color:#fff; }
@@ -2070,6 +2070,7 @@
           <button type="button" id="scanUndoBtn" disabled>↩ Undo</button>
           <button type="button" id="scanCompareBtn">👁 Before</button>
           <button type="button" id="scanStartOverBtn">⟲ Start over</button>
+          <button type="button" id="scanClearBtn" style="flex-basis:100%;">🗑 Clear screen (remove this photo)</button>
         </div>
         <div class="canvas-wrap" id="scanCanvasWrap" style="display:none;">
           <canvas id="scanCanvas" style="touch-action:none;"></canvas>
@@ -2120,6 +2121,7 @@
           <div class="tool-upload-row" style="margin-top:6px;">
             <button class="tool-btn" id="scanRetypeBtn">📝 Retype as new document ⭐ Premium</button>
           </div>
+          <div class="error-box" id="retypeInlineError" style="display:none; margin-top:8px;"></div>
           <details class="tool-hint mini-help" style="margin-top:8px;">
             <summary style="cursor:pointer; text-decoration:underline;">Which should I use — Clean or Retype?</summary>
             <div style="margin-top:6px;">
@@ -2550,7 +2552,7 @@
     const scanBusy = !!(typeof scanSrcCanvas !== 'undefined' && scanSrcCanvas) || (typeof scanPages !== 'undefined' && scanPages.length > 0);
     goScanBtn.classList.toggle('in-progress', scanBusy);
   }
-  closeScanBtn.addEventListener('click', () => { showView('home'); markInProgress(); });
+  closeScanBtn.addEventListener('click', () => { try{ hideRetypePanelIfOpen(); }catch(e){} showView('home'); markInProgress(); });
   closeShrinkBtn.addEventListener('click', () => showView('home'));
   closeSignBtn.addEventListener('click', () => showView('home'));
   homeBtn.addEventListener('click', markInProgress);
@@ -3201,13 +3203,22 @@
     scanCompareBtn.textContent = on ? '✨ After' : '👁 Before';
   }
   scanUndoBtn.addEventListener('click', () => {
+    hideRetypePanelIfOpen();
     const st = scanUndoStack.pop();
     if(st) applySnapshot(st);
     scanUndoBtn.disabled = !scanUndoStack.length;
     showStatus('↩ Undone', 1200);
   });
   scanCompareBtn.addEventListener('click', () => { setCompare(!scanCompareOn); renderScanCanvas(); });
+  // 🗑 Clear: removes the photo and everything made from it, leaving a blank screen to start fresh.
+  document.getElementById('scanClearBtn').addEventListener('click', () => {
+    resetScanTool();
+    try{ const rp = document.getElementById('retypePaper'); if(rp) rp.innerHTML = ''; }catch(e){}
+    try{ window.scrollTo({ top: 0, behavior: 'smooth' }); }catch(e){}
+    showStatus('Screen cleared ✓ Take or upload a new photo.', 2500);
+  });
   scanStartOverBtn.addEventListener('click', () => {
+    hideRetypePanelIfOpen();
     if(!scanSrcCanvas) return;
     pushUndo();
     applySnapshot({ mode: 'corners', corners: scanFirstCorners, flat: null, rot: 0, fine: 0, enh: true, bw: false });
@@ -3256,6 +3267,7 @@
   }
 
   function resetScanTool(){
+    hideRetypePanelIfOpen();
     scanCurrentImg = null;
     scanSrcCanvas = null;
     scanFlatCanvas = null;
@@ -3281,6 +3293,7 @@
   }
 
   async function handleScanFile(file){
+    hideRetypePanelIfOpen();
     scanError.style.display = 'none';
     if(blockIfOutOfFreeUses(scanError)) return;
     try{
@@ -3871,6 +3884,15 @@
     retypePanel.style.display = 'block';
     retypePanel.scrollIntoView({ behavior:'smooth', block:'start' });
   }
+  // If the retyped page is showing, hide it so the photo comes back (used by Undo, Start over, Back, new photo).
+  function hideRetypePanelIfOpen(){
+    try{
+      if(retypePanel && retypePanel.style.display === 'block'){
+        retypePanel.style.display = 'none';
+        if(scanSrcCanvas) scanCanvasWrap.style.display = 'flex';
+      }
+    }catch(e){}
+  }
   function closeRetypePanel(){
     retypePanel.style.display = 'none';
     if(scanSrcCanvas){
@@ -3886,6 +3908,7 @@
   scanRetypeBtn.addEventListener('click', async () => {
     if(retypeBusy) return;
     scanError.style.display = 'none';
+    const rie = document.getElementById('retypeInlineError'); if(rie) rie.style.display = 'none';
     const code = aiCode();
     ensureScanResult();
     const page = processedPage();
@@ -3980,9 +4003,13 @@
       showStatus((unsure ? 'Retyped ✓ ' + unsure + ' word' + (unsure > 1 ? 's' : '') + ' marked [?] could not be read clearly — tap each yellow [?] and type the correct word.' : 'Retyped ✓ Tap any word to fix it.') + (typeof data.pagesLeft === 'number' ? ' (' + data.pagesLeft + ' AI pages left)' : ''), 4000);
     }catch(err){
       sfaToast.style.display = 'none';
-      scanError.textContent = err.message || 'Could not retype right now. Please try again.';
+      const msg = err.message || 'Could not retype right now. Please try again.';
+      scanError.textContent = msg;
       scanError.style.display = 'block';
-      scanError.scrollIntoView({ behavior:'smooth', block:'center' });
+      // Also show it right under the Retype button, where you are looking.
+      const rie2 = document.getElementById('retypeInlineError');
+      if(rie2){ rie2.textContent = '⚠ ' + msg; rie2.style.display = 'block'; rie2.scrollIntoView({ behavior:'smooth', block:'center' }); }
+      else scanError.scrollIntoView({ behavior:'smooth', block:'center' });
     }finally{
       retypeBusy = false;
       scanRetypeBtn.textContent = label;
