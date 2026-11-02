@@ -2088,6 +2088,7 @@
         </div>
 
         <div id="scanEditControls" style="display:none;">
+          <button class="tool-btn primary" id="scanGoSaveBtn" style="width:100%;margin-bottom:10px;">💾 Save · Share · Print</button>
           <details class="fold" id="foldFix">
             <summary>🔧 Fix the photo<small>Clean paper · Black &amp; White · rotate · straighten · corners</small></summary>
             <div class="fold-body">
@@ -3230,8 +3231,26 @@
       scanFlatCanvas = flattenPage(scanSrcCanvas, scanCorners);
       scanCleanCache = {};
       scanFineAngle = 0; scanStraightenSlider.value = 0;
+      // A real paper is mostly light. A normal colour photo (people, places) is not,
+      // so keep its colours instead of "cleaning" it into a negative-looking picture.
+      try {
+        const t = document.createElement('canvas'); t.width = 48; t.height = 48;
+        const tc = t.getContext('2d'); tc.drawImage(scanFlatCanvas, 0, 0, 48, 48);
+        const td = tc.getImageData(0, 0, 48, 48).data;
+        let light = 0, sat = 0, n = 0;
+        for(let i = 0; i < td.length; i += 4){
+          const mx = Math.max(td[i], td[i+1], td[i+2]), mn = Math.min(td[i], td[i+1], td[i+2]);
+          if(mx > 150) light++;
+          if(mx - mn > 60) sat++;
+          n++;
+        }
+        const looksLikePaper = (light / n) > 0.6 && (sat / n) < 0.25;
+        scanEnhanceOn = looksLikePaper;
+        scanEnhanceBtn.classList.toggle('active', looksLikePaper);
+        if(!looksLikePaper) showStatus('This looks like a normal photo, so its colours were kept. Tap ✨ Clean paper to clean it anyway.', 4500);
+      } catch(err){}
       showScanMode('result');
-      showStatus('Page ready ✓', 2000);
+      if(scanEnhanceOn) showStatus('Page ready ✓', 2000);
       scanCanvasWrap.scrollIntoView({ behavior:'smooth', block:'start' });
     }, 30);
   }
@@ -3405,6 +3424,11 @@
     showStatus('Page added ✓ Now take or upload the next page.', 3000);
   });
 
+  document.getElementById('scanGoSaveBtn').addEventListener('click', () => {
+    const f = document.getElementById('foldSave');
+    f.open = true;
+    f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
   document.getElementById('foldSave').addEventListener('toggle', (e) => {
     if(!e.target.open) return;
     setScanStep(3);
