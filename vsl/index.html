@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScanFixAll — Turn a messy document photo into a clean one</title>
+<meta name="description" content="Snap a photo of a crumpled paper and get a clean, ready-to-send document. Shrink big photos, sign on screen. Try free on your phone.">
+<style>
+  :root{
+    --bg:#FFF8F0; --card:#FFFFFF; --ink:#1E2A2C; --muted:#5A6668; --line:#EADFD2;
+    --brand:#C9472F; --brand-dark:#A93A25; --soft:#FFEDE0; --ok:#1F7A44;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+  section{padding:38px 0}
+  h1{font-size:2rem;line-height:1.2;margin:0 0 14px}
+  h2{font-size:1.5rem;line-height:1.25;margin:0 0 14px}
+  h3{margin:0 0 6px;font-size:1.1rem}
+  p{margin:0 0 14px}
+  .muted{color:var(--muted)}
+  .center{text-align:center}
+  .btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;padding:15px 26px;border-radius:12px;font-size:1.05rem}
+  .btn:hover{background:var(--brand-dark)}
+  .btn.ghost{background:transparent;color:var(--brand);border:2px solid var(--brand)}
+  .sub{font-size:.92rem;color:var(--muted);margin-top:10px}
+  .hero{padding-top:44px;text-align:center}
+  .tag{display:inline-block;background:var(--soft);color:var(--brand-dark);font-weight:700;font-size:.85rem;padding:5px 12px;border-radius:99px;margin-bottom:14px}
+  .video{background:#1E2A2C;color:#cfd6d7;border-radius:16px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;margin:6px 0 4px}
+  .video video{width:100%;height:100%;border-radius:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .grid{display:grid;gap:14px}
+  .steps{counter-reset:s;display:grid;gap:14px}
+  .step{display:flex;gap:14px;align-items:flex-start}
+  .step::before{counter-increment:s;content:counter(s);flex:none;width:36px;height:36px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  ul.tick{list-style:none;padding:0;margin:0}
+  ul.tick li{padding-left:28px;position:relative;margin-bottom:8px}
+  ul.tick li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:700}
+  .price{font-size:1.8rem;font-weight:800}
+  .price small{font-size:.9rem;font-weight:500;color:var(--muted)}
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+  summary{font-weight:700;cursor:pointer}
+  details p{margin:10px 0 0}
+  footer{padding:30px 0 50px;text-align:center;font-size:.9rem;color:var(--muted)}
+  footer a{color:var(--brand-dark)}
+  @media (min-width:640px){ h1{font-size:2.5rem} .two{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<!-- 1. HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Free to try · Works on your phone</span>
+    <h1>Turn a messy photo of a paper into a clean, ready-to-send document.</h1>
+    <p class="muted">Crumpled, crooked, dark or dirty? Take a photo with your phone. ScanFixAll straightens it, cleans it, and makes it small enough to send.</p>
+    <p><a class="btn" href="https://scanfixall.netlify.app">Try it free</a></p>
+    <p class="sub">No sign-up. No download. Opens right in your phone's browser.</p>
+
+    <!-- DEMO VIDEO SLOT: when the video is ready, replace the box below with:
+         <video controls playsinline poster="" src="demo.mp4"></video>  -->
+    <div class="video" id="demo-video"><span>Demo video coming soon</span></div>
+  </div>
+</header>
+
+<!-- 2. PROBLEM -->
+<section class="alt">
+  <div class="wrap">
+    <h2>Sound familiar?</h2>
+    <ul class="tick">
+      <li>You photographed a form, receipt or letter, and it looks crooked and dark.</li>
+      <li>The office or school said, "Please send a clear copy."</li>
+      <li>Your photo is too big to send, and the app says "file too large."</li>
+      <li>You have to print a paper, sign it by hand, and scan it again, just to sign once.</li>
+    </ul>
+    <p class="muted" style="margin-top:14px">There's no need to find a scanner shop or install five different apps.</p>
+  </div>
+</section>
+
+<!-- 3. HOW IT WORKS -->
+<section>
+  <div class="wrap">
+    <h2>Three simple steps</h2>
+    <div class="steps">
+      <div class="step"><div><h3>Take a photo</h3><p class="muted">Use your phone camera, or pick a photo you already have.</p></div></div>
+      <div class="step"><div><h3>Tap Clean</h3><p class="muted">The page is straightened and cleaned so it looks like a proper scan.</p></div></div>
+      <div class="step"><div><h3>Save, Share or Print</h3><p class="muted">Send it by email, Messenger or Viber, or print it. Big photos can be shrunk first.</p></div></div>
+    </div>
+    <p class="center" style="margin-top:22px"><a class="btn" href="https://scanfixall.netlify.app">Try it free</a></p>
+  </div>
+</section>
+
+<!-- 4. WHAT YOU CAN DO -->
+<section class="alt">
+  <div class="wrap">
+    <h2>What you can do with ScanFixAll</h2>
+    <div class="grid two">
+      <div class="card"><h3>📄 Scan a Document</h3><p class="muted" style="margin:0">Clean up a crumpled, crooked or dirty page. Combine pages into one PDF.</p></div>
+      <div class="card"><h3>🖼️ Shrink a Photo</h3><p class="muted" style="margin:0">Make any photo small enough to send or post, in seconds.</p></div>
+      <div class="card"><h3>✍️ Sign a Document</h3><p class="muted" style="margin:0">Draw your signature on the screen and place it on the page. No printer needed.</p></div>
+      <div class="card"><h3>📝 Retype, Translate, Listen</h3><p class="muted" style="margin:0">Premium. Get a brand-new clean page, translate it to another language, or hear it read aloud.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. WHO IT'S FOR -->
+<section>
+  <div class="wrap">
+    <h2>Made for people who handle papers every day</h2>
+    <ul class="tick">
+      <li><b>Small business owners:</b> receipts, invoices, permits, contracts.</li>
+      <li><b>Office staff and freelancers:</b> send clear copies to clients and offices.</li>
+      <li><b>Families:</b> IDs, school forms, medical papers.</li>
+      <li><b>Teachers and students:</b> handouts, requirements, reports. There is a Class plan for a whole classroom.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 6. PRICING -->
+<section class="alt" id="pricing">
+  <div class="wrap">
+    <h2>Start free. Pay only if you need more.</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Free to try</h3>
+        <p class="price">₱0</p>
+        <ul class="tick">
+          <li>Scan, clean, shrink and sign</li>
+          <li>3 free AI pages on your phone (Retype, Translate or Listen)</li>
+          <li>No code needed</li>
+        </ul>
+      </div>
+      <div class="card" style="border:2px solid var(--brand)">
+        <h3>👨‍👩‍👧 Family Premium</h3>
+        <p class="price">₱250 <small>/ 30 days</small></p>
+        <ul class="tick">
+          <li>Unlimited scans, shrinks and signing, no watermark</li>
+          <li>60 AI pages for each 30 days</li>
+          <li>You + up to 5 family members</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>🏫 Class Plan: ₱1,500 / 30 days</h3>
+      <p class="muted" style="margin:0">One teacher plus up to 50 students, one code each. The class shares 100 AI pages.</p>
+    </div>
+    <p class="sub">Prepaid, like load. Pay once for 30 days. No auto-charge, no card stored. Payment is done inside the app.</p>
+    <p class="center"><a class="btn" href="https://scanfixall.netlify.app">Try it free first</a></p>
+  </div>
+</section>
+
+<!-- 7. FAQ -->
+<section>
+  <div class="wrap">
+    <h2>Questions</h2>
+    <details><summary>Do I need to install anything?</summary><p>No. Open the link in your phone's browser. You can also add it to your home screen.</p></details>
+    <details><summary>Is it really free to try?</summary><p>Yes. You can scan, clean, shrink and sign without paying. Premium is only for more AI pages and unlimited use.</p></details>
+    <details><summary>How do I pay?</summary><p>Tap Premium inside the app and follow the steps. You pay once for 30 days, and your access code appears in the app.</p></details>
+    <details><summary>Where do my documents go?</summary><p>Please read our <a href="/terms.html">Terms of Use</a> for how the app handles your files.</p></details>
+    <details><summary>I paid but did not get my code.</summary><p>Email <a href="mailto:scanfixall@gmail.com">scanfixall@gmail.com</a> and we will sort it out.</p></details>
+    <details><summary>Does one code work on many phones?</summary><p>Each code works on one phone. Family members make their own code in their own phone's Settings.</p></details>
+  </div>
+</section>
+
+<!-- 8. FINAL CTA -->
+<section class="alt">
+  <div class="wrap center">
+    <h2>Your next paper can look clean in under a minute.</h2>
+    <p><a class="btn" href="https://scanfixall.netlify.app">Try ScanFixAll free</a></p>
+    <p class="sub">Questions? <a href="mailto:scanfixall@gmail.com" style="color:var(--brand-dark)">scanfixall@gmail.com</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <strong>Beavs Apps Software Development Service</strong><br>
+    DTI-registered · Santa Rosa City, Laguna, Philippines<br>
+    <a href="/terms.html">Terms of Use</a>
+  </div>
+</footer>
+
+</body>
+</html>
