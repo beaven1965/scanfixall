@@ -1539,6 +1539,17 @@
   .ask-btn b{display:block;font-size:1rem}
   .ask-btn span{display:block;font-size:.85rem;opacity:.75;margin-top:2px}
   .ask-or{font-size:.85rem;opacity:.7;margin:12px 0 8px}
+  .mis{border:1.5px solid var(--surface-line);background:var(--surface);border-radius:14px;padding:13px 14px;margin:0 0 14px}
+  .mis-h{display:flex;justify-content:space-between;align-items:center;font-weight:800}
+  .mis-bar{height:10px;border-radius:99px;background:var(--surface-line);overflow:hidden;margin:8px 0 4px}
+  .mis-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E8A317,#C9472F);transition:width .5s}
+  .mis-s{font-size:.85rem;opacity:.75;margin:0 0 8px}
+  .mis-row{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:1.5px solid var(--surface-line);background:transparent;color:inherit;border-radius:12px;padding:9px 10px;margin-top:6px;font:inherit;cursor:pointer}
+  .mis-row.done{border-color:#1F7A44}
+  .mis-row .mi{width:30px;height:30px;border-radius:50%;background:var(--surface-line);display:flex;align-items:center;justify-content:center;flex:none}
+  .mis-row.done .mi{background:#1F7A44;color:#fff}
+  .mis-row small{display:block;opacity:.7}
+  .mis-toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:11px 16px;border-radius:14px;z-index:99999;max-width:90%;text-align:center}
   .mode-card{
     display:flex;
     align-items:center;
@@ -1961,8 +1972,14 @@
         <button type="button" class="ask-btn" data-go="shrink"><b>My photo is too big to send</b><span>Make it smaller so Messenger, email or a school portal accepts it.</span></button>
         <button type="button" class="ask-btn" data-go="sign"><b>I need to sign a paper without printing it</b><span>Draw your signature on the screen and put it on the page.</span></button>
         <button type="button" class="ask-btn" data-go="settings"><b>I have a code and want to unlock Premium</b><span>Type the code you received from us.</span></button>
-        <p class="ask-or">Or choose a tool:</p>
       </div>
+      <div class="mis" id="misCard">
+        <div class="mis-h"><span>My missions</span><span id="misStars">⭐ 0</span></div>
+        <div class="mis-bar"><i id="misBar"></i></div>
+        <p class="mis-s" id="misCount">0 of 4 done. Finish them to learn the whole app.</p>
+        <div id="misList"></div>
+      </div>
+      <p class="ask-or">Or choose a tool:</p>
       <div class="mode-cards">
         <button class="mode-card" id="goScanBtn">
           <span class="mode-icon">📄</span>
@@ -5581,6 +5598,46 @@
     var b=e.target.closest('.ask-btn'); if(!b) return;
     var t=document.getElementById(map[b.getAttribute('data-go')]); if(t) t.click();
   });
+})();
+</script>
+<script>
+(function(){
+  var M=[
+   {k:'clean',ic:'📄',t:'Clean up my first paper',s:'Scan a paper, then save, print or share it.',b:'Neat Starter',go:'goScanBtn',on:['scanSaveImageBtn','scanSavePdfBtn','scanPrintBtn','scanShareBtn']},
+   {k:'shrink',ic:'🤳',t:'Shrink one big photo',s:'Make a photo smaller, then save or share it.',b:'Size Saver',go:'goShrinkBtn',on:['shrinkSaveBtn','shrinkShareBtn']},
+   {k:'sign',ic:'✍️',t:'Sign a paper on my phone',s:'Add your signature, then save, print or share.',b:'Paperless Pro',go:'goSignBtn',on:['signSaveImageBtn','signSavePdfBtn','signPrintBtn','signShareBtn']},
+   {k:'send',ic:'📤',t:'Send a clean page to someone',s:'Use any Share button after cleaning or signing.',b:'Sent It!',go:'goScanBtn',on:['scanShareBtn','shrinkShareBtn','signShareBtn','retypeShareBtn']}
+  ];
+  var KEY='sfa_missions_v1', st={};
+  try{ st=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ st={}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} }
+  var list=document.getElementById('misList'); if(!list) return;
+  function toast(msg){ var d=document.createElement('div'); d.className='mis-toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(function(){ d.remove(); },2600); }
+  function draw(){
+    var n=M.filter(function(m){return st[m.k];}).length;
+    document.getElementById('misBar').style.width=(n*25)+'%';
+    document.getElementById('misStars').textContent='⭐ '+(n*10);
+    document.getElementById('misCount').textContent = n===4 ? '🎉 All done! You are a ScanFixAll Master. Tell a friend about it!' : n+' of 4 done. Finish them to learn the whole app.';
+    list.innerHTML='';
+    M.forEach(function(m){
+      var b=document.createElement('button'); b.type='button'; b.className='mis-row'+(st[m.k]?' done':'');
+      b.innerHTML='<span class="mi">'+(st[m.k]?'✓':m.ic)+'</span><span><b>'+m.t+'</b><small>'+(st[m.k]?'Done · '+m.b+' badge':m.s)+'</small></span>';
+      b.addEventListener('click',function(){ var g=document.getElementById(m.go); if(g) g.click(); });
+      list.appendChild(b);
+    });
+  }
+  function done(m){
+    if(st[m.k]) return; st[m.k]=1; save(); draw();
+    toast('🎉 '+m.b+' badge unlocked!');
+  }
+  M.forEach(function(m){
+    m.on.forEach(function(id){
+      var el=document.getElementById(id); if(!el) return;
+      el.addEventListener('click',function(){ if(!el.disabled) done(m); });
+    });
+  });
+  // the Share buttons also count for "send": they are listed under the send mission
+  draw();
 })();
 </script>
 </body>
