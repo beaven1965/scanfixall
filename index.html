@@ -1532,6 +1532,13 @@
     gap:16px;
     margin-top:12px;
   }
+  .ask-wrap{margin:0 0 14px}
+  .ask-title{font-size:1.2rem;font-weight:800;margin:0 0 4px}
+  .ask-sub{font-size:.9rem;opacity:.75;margin:0 0 10px}
+  .ask-btn{display:block;width:100%;text-align:left;border:1.5px solid var(--surface-line);background:var(--surface);color:inherit;border-radius:14px;padding:13px 14px;margin-bottom:8px;font:inherit;cursor:pointer}
+  .ask-btn b{display:block;font-size:1rem}
+  .ask-btn span{display:block;font-size:.85rem;opacity:.75;margin-top:2px}
+  .ask-or{font-size:.85rem;opacity:.7;margin:12px 0 8px}
   .mode-card{
     display:flex;
     align-items:center;
@@ -1947,6 +1954,15 @@
   <main>
     <!-- HOME -->
     <div class="home-view" id="homeView" style="display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; padding-top:20px;">
+      <div class="ask-wrap" id="askWrap">
+        <p class="ask-title">What would you like to do today?</p>
+        <p class="ask-sub">Tap the sentence that matches what you want. It takes you straight there.</p>
+        <button type="button" class="ask-btn" data-go="scan"><b>I want to clean up a photo of a paper</b><span>Straighten it, brighten it, and make it look like a proper scan.</span></button>
+        <button type="button" class="ask-btn" data-go="shrink"><b>My photo is too big to send</b><span>Make it smaller so Messenger, email or a school portal accepts it.</span></button>
+        <button type="button" class="ask-btn" data-go="sign"><b>I need to sign a paper without printing it</b><span>Draw your signature on the screen and put it on the page.</span></button>
+        <button type="button" class="ask-btn" data-go="settings"><b>I have a code and want to unlock Premium</b><span>Type the code you received from us.</span></button>
+        <p class="ask-or">Or choose a tool:</p>
+      </div>
       <div class="mode-cards">
         <button class="mode-card" id="goScanBtn">
           <span class="mode-icon">📄</span>
@@ -2068,7 +2084,7 @@
 
         <div class="scan-toolbar" id="scanToolbar" style="display:none;">
           <button type="button" id="scanUndoBtn" disabled>↩ Undo</button>
-          <button type="button" id="scanCompareBtn">👁 Before</button>
+          <button type="button" id="scanCompareBtn">👁 Show original photo</button>
           <button type="button" id="scanStartOverBtn">⟲ Start over</button>
           <button type="button" id="scanClearBtn" style="flex-basis:100%;">🗑 Clear screen (remove this photo)</button>
         </div>
@@ -2079,7 +2095,7 @@
         <div id="scanCornerControls" style="display:none;">
           <div class="tool-hint">Drag the 4 round <b>corner dots</b> (also called corner handles) onto the 4 corners of the paper. The page inside the dots is kept; everything outside is cut off. Then tap <b>Flatten &amp; clean</b>.</div>
           <div class="tool-upload-row" style="margin-top:10px;">
-            <button class="tool-btn primary" id="scanFlattenBtn">✅ Flatten &amp; clean</button>
+            <button class="tool-btn primary" id="scanFlattenBtn">✅ Straighten &amp; clean my paper</button>
             <button class="tool-btn" id="scanWholePhotoBtn">Use whole photo</button>
           </div>
           <button type="button" class="ai-retype-btn" id="scanAiRetypeBtn">
@@ -2106,7 +2122,7 @@
           </div>
           <div class="enhance-toggle-row" style="margin-top:10px;">
             <button id="scanEnhanceBtn" class="active">✨ Clean paper</button>
-            <button id="scanBwBtn">⬛ Black &amp; White mode</button>
+            <button id="scanBwBtn">⬛ Make it black &amp; white</button>
           </div>
             </div>
           </details>
@@ -2390,7 +2406,7 @@
         </div>
         <div class="redeem-row">
           <input type="text" id="redeemCodeInput" placeholder="Enter access code (e.g. SE-...)">
-          <button id="redeemCodeBtn">Unlock</button>
+          <button id="redeemCodeBtn">Unlock Premium</button>
         </div>
         <div class="error-box" id="redeemError" style="display:none;"></div>
         <div class="hint" id="myCodeHint" style="display:none;"></div>
@@ -3200,7 +3216,7 @@
   function setCompare(on){
     scanCompareOn = on;
     scanCompareBtn.classList.toggle('on', on);
-    scanCompareBtn.textContent = on ? '✨ After' : '👁 Before';
+    scanCompareBtn.textContent = on ? '✨ Show cleaned photo' : '👁 Show original photo';
   }
   scanUndoBtn.addEventListener('click', () => {
     hideRetypePanelIfOpen();
@@ -3913,7 +3929,7 @@
     ensureScanResult();
     const page = processedPage();
     if(!page || scanCanvasWrap.style.display === 'none'){
-      scanError.textContent = 'Please open the page you want to retype first: tap Upload Photo (or Take Photo), then Flatten & clean, then Retype.';
+      scanError.textContent = 'Please open the page you want to retype first: tap Upload Photo (or Take Photo), then Straighten & clean my paper, then Retype.';
       scanError.style.display = 'block';
       scanError.scrollIntoView({ behavior:'smooth', block:'center' });
       return;
@@ -5429,7 +5445,7 @@
       redeemError.style.display = 'block';
     } finally {
       redeemCodeBtn.disabled = false;
-      redeemCodeBtn.textContent = 'Unlock';
+      redeemCodeBtn.textContent = 'Unlock Premium';
     }
   });
 
@@ -5557,5 +5573,15 @@
 })();
 </script>
 
+<script>
+(function(){
+  var w=document.getElementById('askWrap'); if(!w) return;
+  var map={scan:'goScanBtn',shrink:'goShrinkBtn',sign:'goSignBtn',settings:'settingsBtn'};
+  w.addEventListener('click',function(e){
+    var b=e.target.closest('.ask-btn'); if(!b) return;
+    var t=document.getElementById(map[b.getAttribute('data-go')]); if(t) t.click();
+  });
+})();
+</script>
 </body>
 </html>
