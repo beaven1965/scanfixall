@@ -17,7 +17,7 @@ import crypto from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 
 const MODEL = 'claude-sonnet-5';
-const PAGE_LIMIT = { family: 60, class: 100 };    // AI pages per 30-day PAID code (Family ₱250 / Class ₱1,500)
+const PAGE_LIMIT = { family: 180, class: 1000 };   // AI pages per 1-year PAID code (Family ₱250 / Class ₱1,500)
 const FREE_PAGE_LIMIT = 3;                          // free (trial) codes: 3 AI pages in total
 
 // 🎁 Free load: a phone/laptop with no code gets FREE_PAGE_LIMIT AI pages, one time, counted as 'free:<device>'.
@@ -52,8 +52,8 @@ async function pageLimitFor(checked){
 }
 function limitReachedMsg(limit, paid){
   return paid
-    ? "You've used all " + limit + ' AI pages (Retype, Translate, Listen) for this 30-day period. You get ' + limit + ' new pages when you renew. Scanning, Clean paper, Shrink, Sign, Share and Print stay free.'
-    : "You've used your " + limit + ' free AI pages (Retype, Translate, Listen). Get Premium (₱250 a month) for 60 AI pages every month. Scanning, Clean paper, Shrink, Sign, Share and Print stay free.';
+    ? "You've used all " + limit + ' AI pages (Retype, Translate, Listen) for this year. You get ' + limit + ' new pages when you renew. Scanning, Clean paper, Shrink, Sign, Share and Print stay free.'
+    : "You've used your " + limit + ' free AI pages (Retype, Translate, Listen). Get Premium (₱250 a year) for 180 AI pages for the whole year. Scanning, Clean paper, Shrink, Sign, Share and Print stay free.';
 }
 const TOO_LONG_MSG = 'This page has too much writing to read in one go. Drag the gold corner dots to include only the part you need (for example, just the handwritten part), then tap Retype again. You were not charged for this page.';
 const OLD_FORMAT_CUTOFF_MS = new Date('2026-09-30T00:00:00+08:00').getTime();

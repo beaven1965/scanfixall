@@ -16,13 +16,13 @@
 const crypto = require('crypto');
 const { getStore, connectLambda } = require('@netlify/blobs');
 
-const CODE_VALID_DAYS = 30;
+const CODE_VALID_DAYS = 365;
 
 // Class Plan payments are ₱1,500; anything at or above this amount gets a
 // Class code (SC-), anything below gets a Family code (SE-).
 const CLASS_MIN_CENTAVOS = 150000;
 
-// Issues a code good for 30 days from right now. The expiry is baked
+// Issues a code good for 1 year from right now. The expiry is baked
 // into the code itself (as 8 hex digits of a Unix timestamp), so
 // verify-code.js can check it later with no database lookup at all.
 // Class codes are signed with "CLASS" in front, so a Family code can't

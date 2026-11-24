@@ -4,8 +4,8 @@
 // to the device it is used on.
 //
 // Kinds of code (all signed with ACCESS_CODE_SECRET, so they can't be faked):
-//   SE-xxxxxxxxxx-eeeeeeee-yyyyyy : Family plan purchase code (30 days, expiry built in)
-//   SC-xxxxxxxxxx-eeeeeeee-yyyyyy : Class plan purchase code  (30 days, expiry built in)
+//   SE-xxxxxxxxxx-eeeeeeee-yyyyyy : Family plan purchase code (1 year, expiry built in)
+//   SC-xxxxxxxxxx-eeeeeeee-yyyyyy : Class plan purchase code  (1 year, expiry built in)
 //   SE-xxxxxxxxxx-yyyyyy          : OLD early-tester code (valid through Sept 29, 2026)
 //   SF-xxxxxxxxxx-yyyyyy          : a family/student code made from a purchase code.
 //                                   Ends when its purchase code ends; can be turned off.

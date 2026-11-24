@@ -10,8 +10,8 @@
 // verify-payment.js and verify-payment-by-id.js tell the plans apart by amount,
 // so if you change CLASS here, change CLASS_MIN_CENTAVOS there too.
 const PLANS = {
-  family: { pesos: 250,  name: 'ScanFixAll Family Premium (30 days)', description: 'ScanFixAll Family Premium — you + up to 5 family members, 30 days, one-time payment (no auto-renew)' },
-  class:  { pesos: 1500, name: 'ScanFixAll Class Plan (30 days)',     description: 'ScanFixAll Class Plan — teacher + up to 50 students, 30 days, one-time payment (no auto-renew)' }
+  family: { pesos: 250,  name: 'ScanFixAll Family Premium (1 year)', description: 'ScanFixAll Family Premium — you + up to 5 family members, 1 year, one-time payment (no auto-renew)' },
+  class:  { pesos: 1500, name: 'ScanFixAll Class Plan (1 year)',     description: 'ScanFixAll Class Plan — teacher + up to 50 students, 1 year, one-time payment (no auto-renew)' }
 };
 
 exports.handler = async (event) => {
